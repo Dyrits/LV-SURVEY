@@ -68,7 +68,12 @@ The Laravel framework is open-sourced software licensed under the [MIT license](
 # Laradock
 
 ```
+# Change the current working directory:
 cd laradock
+
+# Copy env-example to .env:
+cp .env.example .env
+# If necessary, change the contents of the .env file to suit your needs.
 
 # Start the containers:
 docker-compose up -d apache2 mysql phpmyadmin workspace 
