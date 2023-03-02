@@ -3,29 +3,53 @@ import { createStore } from "vuex";
 export const Mutations = {
   User: {
     SignOut: "user/sign-out",
+    SignUp: "user/sign-up",
   },
 };
 
-export const Actions = {};
+export const Actions = {
+  User: {
+    SignUp: "user/sign-up",
+  },
+};
 
 const store = createStore({
   state: {
     user: {
-      data: {
-        name: "Tom Cook",
-        email: "tom@example.com",
-        image:
-          "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-      },
-      token: true,
+      data: {},
+      token: sessionStorage.getItem("token") || false,
     },
   },
   getters: {},
-  actions: {},
+  actions: {
+    [Actions.User.SignUp]: ({ commit }, user) => {
+      return fetch("http://localhost:8000/api/user/sign-up", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify(user),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          commit(Mutations.User.SignUp, data);
+          return data;
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    },
+  },
   mutations: {
     [Mutations.User.SignOut]: (state) => {
       state.user.data = {};
       state.user.token = false;
+    },
+    [Mutations.User.SignUp]: (state, data) => {
+      state.user.data = data.user;
+      state.user.token = data.token;
+      sessionStorage.setItem("token", data.token);
     },
   },
   modules: {},
