@@ -14,7 +14,7 @@ class AuthenticationController extends Controller
     {
         $data = $request->validate([
             'name' => 'required|string',
-            'email' => 'required|string|email|unique:users',
+            'email' => 'required|string|email|unique:users,email',
             'password' => ['required', 'confirmed', Password::min(8)->letters()->numbers()->symbols()->uncompromised()],
         ]);
         $user = User::create([
@@ -33,7 +33,7 @@ class AuthenticationController extends Controller
     public function login(Request $request)
     {
         $credentials = $request->validate([
-            'email' => 'required|string|email|unique:users',
+            'email' => 'required|string|email|exists:users,email',
             'password' => 'required',
             'remember' => 'boolean'
         ]);

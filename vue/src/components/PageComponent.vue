@@ -20,7 +20,3 @@ const props = defineProps({
   title: String
 });
 </script>
-
-<style scoped>
-
-</style>

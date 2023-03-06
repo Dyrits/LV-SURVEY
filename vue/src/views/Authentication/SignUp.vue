@@ -43,7 +43,7 @@
 
     <div class="flex items-center justify-between">
       <div class="flex items-center">
-        <input id="remember-me" name="remember-me" type="checkbox"
+        <input id="remember-me" name="remember-me" type="checkbox" v-model="user.remember"
                class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"/>
         <label for="remember-me" class="ml-2 block text-sm text-gray-900">Remember me</label>
       </div>
@@ -74,16 +74,13 @@ const user = {
   email: String(),
   password: String(),
   password_confirmation: String(),
+  remember: false,
 }
 
 function register() {
-  store.dispatch(Actions.User.SignUp, user).then(() => {
+  store.dispatch(Actions.User.SignUp, user).then((data) => {
     router.push({ name: "Dashboard" });
   });
 }
 
 </script>
-
-<style scoped>
-
-</style>

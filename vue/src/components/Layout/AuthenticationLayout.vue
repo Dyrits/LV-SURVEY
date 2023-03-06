@@ -11,7 +11,3 @@ export default {
   name: "AuthenticationLayout"
 };
 </script>
-
-<style scoped>
-
-</style>

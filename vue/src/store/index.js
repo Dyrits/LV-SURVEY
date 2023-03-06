@@ -1,15 +1,18 @@
 import { createStore } from "vuex";
 
+import api from "../axios";
+
 export const Mutations = {
   User: {
     SignOut: "user/sign-out",
-    SignUp: "user/sign-up",
+    SignIn: "user/sign-in",
   },
 };
 
 export const Actions = {
   User: {
     SignUp: "user/sign-up",
+    SignIn: "user/sign-in",
   },
 };
 
@@ -23,22 +26,16 @@ const store = createStore({
   getters: {},
   actions: {
     [Actions.User.SignUp]: ({ commit }, user) => {
-      return fetch("http://localhost:8000/api/user/sign-up", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify(user),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          commit(Mutations.User.SignUp, data);
-          return data;
-        })
-        .catch((error) => {
-          console.error(error);
-        });
+      return api.post("/user/sign-up", user).then(({ data }) => {
+        commit(Mutations.User.SignIn, data);
+        return data;
+      });
+    },
+    [Actions.User.SignIn]: ({ commit }, user) => {
+      return api.post("/user/sign-in", user).then(({ data }) => {
+        commit(Mutations.User.SignIn, data);
+        return data;
+      });
     },
   },
   mutations: {
@@ -46,7 +43,7 @@ const store = createStore({
       state.user.data = {};
       state.user.token = false;
     },
-    [Mutations.User.SignUp]: (state, data) => {
+    [Mutations.User.SignIn]: (state, data) => {
       state.user.data = data.user;
       state.user.token = data.token;
       sessionStorage.setItem("token", data.token);
