@@ -13,6 +13,7 @@ export const Actions = {
   User: {
     SignUp: "user/sign-up",
     SignIn: "user/sign-in",
+    SignOut: "user/sign-out",
   },
 };
 
@@ -25,6 +26,12 @@ const store = createStore({
   },
   getters: {},
   actions: {
+    [Actions.User.SignOut]: ({ commit }) => {
+      return api.post("/user/sign-out").then(({ data }) => {
+        commit(Mutations.User.SignOut);
+        return data;
+      });
+    },
     [Actions.User.SignUp]: ({ commit }, user) => {
       return api.post("/user/sign-up", user).then(({ data }) => {
         commit(Mutations.User.SignIn, data);

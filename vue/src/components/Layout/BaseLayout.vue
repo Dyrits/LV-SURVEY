@@ -103,7 +103,7 @@ import { useRouter } from "vue-router";
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/vue";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/vue/24/outline";
 
-import { Mutations } from "../../store/index.js";
+import { Actions } from "../../store/index.js";
 
 const navigation = [
   { name: "Dashboard", to: { name: "Dashboard" } },
@@ -128,8 +128,7 @@ export default {
     const router = useRouter();
     const user = computed(() => store.state.user.data);
     function signOut() {
-      store.commit(Mutations.User.SignOut);
-      router.push({ name: "SignIn" });
+      store.dispatch(Actions.User.SignOut).then(() => router.push({ name: "SignIn" }));
     }
     return {
       navigation,
