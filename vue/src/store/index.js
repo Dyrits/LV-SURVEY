@@ -49,6 +49,7 @@ const store = createStore({
     [Mutations.User.SignOut]: (state) => {
       state.user.data = {};
       state.user.token = false;
+      sessionStorage.removeItem("token");
     },
     [Mutations.User.SignIn]: (state, data) => {
       state.user.data = data.user;
