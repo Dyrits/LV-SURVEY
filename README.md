@@ -64,23 +64,3 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-
-# Laradock
-
-```
-# Clone Laradock inside the project:
-git clone https://github.com/Laradock/laradock.git
-
-# Change the current working directory:
-cd laradock
-
-# Copy env-example to .env:
-cp .env.example .env
-# If necessary, change the contents of the .env file to suit your needs.
-
-# Start the containers:
-docker-compose up -d apache2 mysql phpmyadmin workspace 
-
-# Shut down the containers:
-docker-compose down
-```
