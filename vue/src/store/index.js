@@ -2,6 +2,9 @@ import { createStore } from "vuex";
 
 import api from "../axios";
 
+// Temporary data~
+import surveys from "../data/surveys";
+
 export const Mutations = {
   User: {
     SignOut: "user/sign-out",
@@ -23,6 +26,7 @@ const store = createStore({
       data: {},
       token: sessionStorage.getItem("token") || false,
     },
+    surveys,
   },
   getters: {},
   actions: {
