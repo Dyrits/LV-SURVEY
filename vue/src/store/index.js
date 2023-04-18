@@ -27,8 +27,13 @@ const store = createStore({
       token: sessionStorage.getItem("token") || false,
     },
     surveys,
+    questions: { types: [] }
   },
-  getters: {},
+  getters: {
+    survey: (state) => (id) => {
+      return state.surveys.find((survey) => survey.id === Number(id));
+    }
+  },
   actions: {
     [Actions.User.SignOut]: ({ commit }) => {
       return api.post("/user/sign-out").then(({ data }) => {

@@ -19,8 +19,8 @@ const routes = [
     children: [
       { path: "/dashboard", name: "Dashboard", component: Dashboard },
       { path: "/surveys", name: "Surveys", component: Surveys },
-      { path: "/surveys/create", name: "SurveyCreate", component: Survey },
-      { path: "/surveys/:id", name: "SurveyView", component: Survey },
+      { path: "/surveys/create", name: "Create", component: Survey },
+      { path: "/surveys/:id", name: "Show", component: Survey },
     ],
   },
   {
