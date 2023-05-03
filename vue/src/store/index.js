@@ -10,6 +10,9 @@ export const Mutations = {
     SignOut: "user/sign-out",
     SignIn: "user/sign-in",
   },
+  Survey: {
+    Save: "survey/save",
+  }
 };
 
 export const Actions = {
@@ -18,6 +21,9 @@ export const Actions = {
     SignIn: "user/sign-in",
     SignOut: "user/sign-out",
   },
+  Survey: {
+    Save: "survey/save",
+  }
 };
 
 const store = createStore({
@@ -53,6 +59,15 @@ const store = createStore({
         return data;
       });
     },
+    [Actions.Survey.Save]: ({ commit }, survey) => {
+      const isUpdate = !!survey.id;
+      const url = isUpdate ? `/survey/${survey.id}` : "/survey";
+      const method = isUpdate ? "put" : "post";
+      return api[method](url, survey).then(({ data }) => {
+        commit(Mutations.Survey.Save, data);
+        return data;
+      });
+    }
   },
   mutations: {
     [Mutations.User.SignOut]: (state) => {
@@ -65,6 +80,10 @@ const store = createStore({
       state.user.token = data.token;
       sessionStorage.setItem("token", data.token);
     },
+    [Mutations.Survey.Save]: (state, survey) => {
+      const surveys = state.surveys.filter(({ id }) => id !== survey.id);
+      state.surveys = [...surveys, survey];
+    }
   },
   modules: {},
 });

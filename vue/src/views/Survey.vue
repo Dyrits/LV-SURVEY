@@ -162,15 +162,16 @@
 
 <script setup>
 import { ref } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { v4 as uuidv4 } from "uuid";
 
-import store from "../store";
+import store, { Actions } from "../store";
 
 import PageComponent from "../components/PageComponent.vue";
 import QuestionComponent from "../components/Editor/QuestionComponent.vue";
 
 const route = useRoute();
+const router = useRouter();
 
 let model = ref({
   title: String(),
@@ -201,5 +202,11 @@ function removeQuestion(question) {
 
 function editQuestion(question) {
   model.value.questions = model.value.questions.map($question => question.id === $question.id ? question : $question);
+}
+
+function saveSurvey() {
+  store.dispatch(Actions.Survey.Save, model.value).then(({ data }) => {
+    router.push({ name: "Show", params: { id: data.id } })
+  });
 }
 </script>
