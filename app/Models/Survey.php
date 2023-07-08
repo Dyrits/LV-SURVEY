@@ -13,10 +13,11 @@ class Survey extends Model
 
     protected $fillable = [
         "title",
+        "image",
         "slug",
         "status",
         "description",
-        "expires_at",
+        "expiration",
         "user_id"
     ];
 

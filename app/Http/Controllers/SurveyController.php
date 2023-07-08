@@ -6,9 +6,11 @@ use App\Http\Resources\SurveyResource;
 use App\Models\Survey;
 use App\Http\Requests\StoreSurveyRequest;
 use App\Http\Requests\UpdateSurveyRequest;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\File;
 
 class SurveyController extends Controller
 {
@@ -28,10 +30,19 @@ class SurveyController extends Controller
      *
      * @param StoreSurveyRequest $request
      * @return SurveyResource
+     * @throws Exception
      */
     public function store(StoreSurveyRequest $request): SurveyResource
     {
-        return new SurveyResource(Survey::create($request->validated()));
+        $data = $request->validated();
+
+        if (isset($data['image'])) {
+            $path = $this->storeImage($data['image']);
+            $data['image'] = $path;
+        }
+
+        $survey = Survey::create($data);
+        return new SurveyResource($survey);
     }
 
     /**
@@ -55,10 +66,21 @@ class SurveyController extends Controller
      * @param UpdateSurveyRequest $request
      * @param Survey $survey
      * @return SurveyResource
+     * @throws Exception
      */
     public function update(UpdateSurveyRequest $request, Survey $survey): SurveyResource
     {
-        $survey->update($request->validated());
+        $data = $request->validated();
+
+        if (isset($data['image']) && !filter_var($data['image'], FILTER_VALIDATE_URL)) {
+            $path = $this->storeImage($data['image']);
+            $data['image'] = $path;
+            if ($survey->image) {
+                File::delete(public_path($survey->image));
+            }
+        }
+
+        $survey->update($data);
         return new SurveyResource($survey);
     }
 
@@ -68,7 +90,7 @@ class SurveyController extends Controller
      * @param Survey $survey
      * @return Response
      */
-    public function destroy(Survey $survey): Response
+    public function destroy(Request $request, Survey $survey): Response
     {
         $user = $request->user();
         if ($survey->user_id !== $user->id) {
@@ -76,5 +98,46 @@ class SurveyController extends Controller
         }
         $survey->delete();
         return response(null, 204);
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function storeImage(mixed $image): string
+    {
+        // Check if the image is a valid string:
+        if (preg_match('/^data:image\/(\w+);base64,/', $image, $type)) {
+            // Get the extension of the image:
+            $image = substr($image, strpos($image, ',') + 1);
+
+            // Get the extension of the image:
+            $extension = strtolower($type[1]);
+
+            // Check if the image is a valid string:
+            if (!in_array($extension, ['jpg', 'jpeg', 'gif', 'png'])) {
+                throw new Exception('The provided image is not valid.');
+            }
+
+            // Decode the image:
+            $image = base64_decode($image);
+
+            // Check if the image is a valid string:
+            if ($image === false) {
+                throw new Exception('The provided image is not valid.');
+            }
+
+            // Create a unique name for the image:
+            $path = 'images/' . uniqid() . '.' . $extension;
+            if (!File::exists(public_path('images/'))) {
+                File::makeDirectory(public_path('images'));
+            }
+
+            // Save the image:
+            file_put_contents($path, $image);
+
+            return $path;
+        } else {
+            throw new Exception('The provided image is not valid.');
+        }
     }
 }

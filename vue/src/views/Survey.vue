@@ -44,7 +44,7 @@
               >
                 <input
                   type="file"
-                  @change="onImageChoose"
+                  @change="editImage"
                   class="absolute left-0 top-0 right-0 bottom-0 opacity-0 cursor-pointer"
                 />
                 Change
@@ -82,15 +82,15 @@
           </div>
           <div>
             <label
-              for="expire_date"
+              for="expiration"
               class="block text-sm font-medium text-gray-700"
             >Expire Date</label
             >
             <input
               type="date"
-              name="expire_date"
-              id="expire_date"
-              v-model="model.expire_date"
+              name="expiration"
+              id="expiration"
+              v-model="model.expiration"
               class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
             />
           </div>
@@ -161,7 +161,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { onMounted, reactive, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { v4 as uuidv4 } from "uuid";
 
@@ -173,21 +173,28 @@ import QuestionComponent from "../components/Editor/QuestionComponent.vue";
 const route = useRoute();
 const router = useRouter();
 
-let model = ref({
+const model = reactive({
   title: String(),
+  expiration: null,
   status: false,
   description: null,
   image: null,
-  expiration: null,
   questions: []
 });
 
-if (route.params.id) {
-  model.value = store.getters.survey(route.params.id);
-}
+onMounted(async () => {
+  if (route.params.id) {
+    await store.dispatch(Actions.Survey.Get, route.params.id).then(survey => {
+      Object.assign(model, {
+        ...survey,
+        status: survey.status !== "draft",
+      });
+    })
+  }
+});
 
 function addQuestion(index) {
-  model.value.questions.splice(index, 0, {
+  model.questions.splice(index, 0, {
     id: uuidv4(),
     type: "text",
     question: String(),
@@ -197,16 +204,25 @@ function addQuestion(index) {
 }
 
 function removeQuestion(question) {
-  model.value.questions.splice(model.value.questions.indexOf(question), 1);
+  model.questions.splice(model.questions.indexOf(question), 1);
 }
 
 function editQuestion(question) {
-  model.value.questions = model.value.questions.map($question => question.id === $question.id ? question : $question);
+  model.questions = model.questions.map($question => question.id === $question.id ? question : $question);
+}
+
+function editImage($event) {
+  const file = $event.target.files[0];
+  const reader = new FileReader();
+  reader.onload = () => {
+    model.image = reader.result;
+  }
+  reader.readAsDataURL(file);
 }
 
 function saveSurvey() {
-  store.dispatch(Actions.Survey.Save, model.value).then(({ data }) => {
-    router.push({ name: "Show", params: { id: data.id } })
+  store.dispatch(Actions.Survey.Save, model).then((survey) => {
+    router.push({ name: "Show", params: { id: survey.id } })
   });
 }
 </script>

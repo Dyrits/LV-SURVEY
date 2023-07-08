@@ -12,6 +12,7 @@ export const Mutations = {
   },
   Survey: {
     Save: "survey/save",
+    Set: "survey/set"
   }
 };
 
@@ -23,6 +24,7 @@ export const Actions = {
   },
   Survey: {
     Save: "survey/save",
+    Get: "survey/get"
   }
 };
 
@@ -33,6 +35,10 @@ const store = createStore({
       token: sessionStorage.getItem("token") || false,
     },
     surveys,
+    survey: {
+      loading: false,
+      data: {},
+    },
     questions: { types: [] }
   },
   getters: {
@@ -63,9 +69,29 @@ const store = createStore({
       const isUpdate = !!survey.id;
       const url = isUpdate ? `/survey/${survey.id}` : "/survey";
       const method = isUpdate ? "put" : "post";
-      return api[method](url, survey).then(({ data }) => {
+      return api[method](url, survey).then(({ data: { data } }) => {
         commit(Mutations.Survey.Save, data);
         return data;
+      });
+    },
+    [Actions.Survey.Get]: async ({ commit }, id) => {
+      // Set the loading state to true:
+      commit(Mutations.Survey.Set, {}, true);
+      // Check if the survey is in the store:
+      let survey = surveys.find((survey) => survey.id === Number(id));
+      // If it is, return it:
+      if (survey) {
+        commit(Mutations.Survey.Set, survey);
+        return survey;
+      }
+      // If not, get it from the API:
+      return api.get(`/survey/${id}`).then(({ data: { data } }) => {
+        commit(Mutations.Survey.Set, data);
+        return data;
+      }).catch((error) => {
+        console.error(error);
+        commit(Mutations.Survey.Set, {});
+        throw error;
       });
     }
   },
@@ -83,6 +109,9 @@ const store = createStore({
     [Mutations.Survey.Save]: (state, survey) => {
       const surveys = state.surveys.filter(({ id }) => id !== survey.id);
       state.surveys = [...surveys, survey];
+    },
+    [Mutations.Survey.Set]: (state, survey, loading = false) => {
+      state.survey = { loading, data: survey };
     }
   },
   modules: {},

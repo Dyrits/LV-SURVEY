@@ -32,10 +32,11 @@ class StoreSurveyRequest extends FormRequest
     {
         return [
             "title" => "required|string|max:255",
+            "image" => "nullable|string",
             "user_id" => "exists:users,id",
             "status" => "required|boolean",
             "description" => "nullable|string",
-            "expires_at" => "nullable|date|after:tomorrow",
+            "expiration" => "nullable|date|after:tomorrow",
         ];
     }
 }
