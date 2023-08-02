@@ -1,6 +1,16 @@
 version: '3.8'
 services:
-    database:
+    laravel:
+        image: bitnami/laravel:latest
+        ports:
+            - "8000:8000"
+        env_file:
+            - ./.env
+        volumes:
+            - ./:/app
+        depends_on:
+            - mysql
+    mysql:
         image: mysql
         environment:
             MYSQL_DATABASE: ${DB_DATABASE}
@@ -10,7 +20,16 @@ services:
         ports:
             - "${DB_PORT}:${DB_PORT}"
         volumes:
-            - database_data:/var/lib/mysql
+            - mysql_data:/var/lib/mysql
+    client:
+        build:
+            context: ./vue
+            dockerfile: Dockerfile
+        ports:
+            - "5173:5173"
+        volumes:
+            - ./vue:/app
+            - /app/node_modules
 
 volumes:
-    database_data:
+    mysql_data:
