@@ -1,13 +1,34 @@
 <template>
-  <PageComponent title="View or create a survey">
+  <PageComponent>
     <template v-slot:header>
       <div class="flex items-center justify-between">
         <h1 class="text-3xl font-bold text-gray-900">
           {{ route.params.id ? model.title : "Create a survey" }}
         </h1>
+        <button
+          v-if="route.params.id"
+          type="button"
+          @click="removeSurvey()"
+          class="py-2 px-3 text-white bg-red-500 rounded-md hover:bg-red-600"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5 -mt-1 inline-block"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+              clip-rule="evenodd"
+            />
+          </svg>
+          Delete Survey
+        </button>
       </div>
     </template>
-    <form @submit.prevent="saveSurvey">
+    <div v-if="loading" class="flex justify-center">Loading...</div>
+    <form @submit.prevent="saveSurvey" v-else>
       <div class="shadow sm:rounded-md sm:overflow-hidden">
         <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
           <div>
@@ -161,7 +182,7 @@
 </template>
 
 <script setup>
-import { onMounted, reactive, ref, watch } from "vue";
+import { onMounted, reactive, ref, watch, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { v4 as uuidv4 } from "uuid";
 
@@ -172,6 +193,8 @@ import QuestionComponent from "../components/Editor/QuestionComponent.vue";
 
 const route = useRoute();
 const router = useRouter();
+
+const loading = computed(() => store.state.survey.loading);
 
 const model = reactive({
   title: String(),
@@ -224,5 +247,14 @@ function saveSurvey() {
   store.dispatch(Actions.Survey.Save, model).then((survey) => {
     router.push({ name: "Show", params: { id: survey.id } })
   });
+}
+
+function removeSurvey() {
+  const confirmation = confirm("Are you sure you want to delete this survey? Operation cannot be undone.");
+  if (confirmation) {
+    store.dispatch(Actions.Survey.Remove, model.id).then(() => {
+      router.push({ name: "Index" })
+    });
+  }
 }
 </script>

@@ -36,7 +36,7 @@
           </RouterLink>
           <button v-if="survey.id"
                   type="button"
-                  @click="deleteSurvey(survey)"
+                  @click="removeSurvey(survey)"
                   class="h-8 w-8 flex items-center justify-center rounded-full border border-transparent text-sm text-red-500 focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
             <svg xmlns="http://www.w3.org/2000/svg"
                  fill="none"
@@ -56,15 +56,19 @@
 </template>
 
 <script setup>
-import { computed } from "vue";
+import { computed, onMounted } from "vue";
 
-import store from "../store";
+import store, { Actions } from "../store";
 
 import PageComponent from "../components/PageComponent.vue";
 
-const surveys = computed(() => store.state.surveys);
+const surveys = computed(() => store.state.surveys.data);
 
-function deleteSurvey(survey) {
+onMounted(async () => {
+    await store.dispatch(Actions.Surveys.Get);
+});
+
+function removeSurvey(survey) {
   confirm("Are you sure you want to delete this survey? Operation cannot be undone.");
 }
 </script>

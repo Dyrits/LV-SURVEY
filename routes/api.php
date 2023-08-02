@@ -21,7 +21,7 @@ Route::middleware('auth:sanctum')->group(function() {
         return $request->user();
     });
     Route::post('/user/sign-out', [AuthenticationController::class, 'logout']);
-    Route::resource('/survey', SurveyController::class);
+    Route::apiResource('/surveys', SurveyController::class);
 });
 
 Route::group(['prefix' => '/user'], function () {

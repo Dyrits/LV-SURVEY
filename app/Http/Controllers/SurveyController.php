@@ -96,7 +96,13 @@ class SurveyController extends Controller
         if ($survey->user_id !== $user->id) {
             abort(403);
         }
+
         $survey->delete();
+
+        if ($survey->image) {
+            File::delete(public_path($survey->image));
+        }
+
         return response(null, 204);
     }
 
