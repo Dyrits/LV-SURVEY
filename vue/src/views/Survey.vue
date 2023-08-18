@@ -213,6 +213,10 @@ onMounted(async () => {
         status: survey.status !== "draft",
       });
     })
+  } else {
+    store.dispatch(Actions.Survey.Create).then(survey => {
+      Object.assign(model, survey);
+    });
   }
 });
 

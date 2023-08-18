@@ -27,6 +27,7 @@ export const Actions = {
     Get: "surveys/get"
   },
   Survey: {
+    Create: "survey/create",
     Save: "survey/save",
     Get: "survey/get",
     Remove: "survey/remove"
@@ -99,6 +100,9 @@ const store = createStore({
         commit(Mutations.Survey.Set, {});
         throw error;
       });
+    },
+    [Actions.Survey.Create]: ({ commit }) => {
+      commit(Mutations.Survey.Set, { data: {} });
     },
     [Actions.Survey.Save]: ({ commit }, survey) => {
       const isUpdate = !!survey.id;
