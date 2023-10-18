@@ -113,7 +113,7 @@
           sm:text-sm
         "
       >
-        <option v-for="type in questionTypes" :key="type" :value="type">
+        <option v-for="type in types" :key="type" :value="type">
           {{ UCFirst(type) }}
         </option>
       </select>

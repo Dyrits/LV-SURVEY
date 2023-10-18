@@ -48,7 +48,7 @@ const store = createStore({
       loading: true,
       data: {}
     },
-    questions: { types: [] }
+    questions: { types: ["text", "select", "radio", "checkbox", "textarea"] }
   },
   actions: {
     [Actions.User.SignOut]: ({ commit }) => {

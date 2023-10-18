@@ -211,6 +211,7 @@ onMounted(async () => {
       Object.assign(model, {
         ...survey,
         status: survey.status !== "draft",
+        expiration: new Date(survey.expiration.split(" ")[0]).toISOString().split("T")[0]
       });
     })
   } else {

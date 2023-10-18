@@ -6,11 +6,14 @@ use App\Http\Resources\SurveyResource;
 use App\Models\Survey;
 use App\Http\Requests\StoreSurveyRequest;
 use App\Http\Requests\UpdateSurveyRequest;
+use App\Models\SurveyQuestion;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class SurveyController extends Controller
 {
@@ -42,6 +45,11 @@ class SurveyController extends Controller
         }
 
         $survey = Survey::create($data);
+
+        // Create new questions:
+        foreach($data['questions'] as $question) {
+            $this->createQuestion($question, $survey->id);
+        }
         return new SurveyResource($survey);
     }
 
@@ -145,5 +153,27 @@ class SurveyController extends Controller
         } else {
             throw new Exception('The provided image is not valid.');
         }
+    }
+
+    private function createQuestion($data, $id) {
+        $data["survey_id"] = $id;
+        if (is_array($data["data"])) {
+            $data["data"] = json_encode($data["data"]);
+        }
+        $validator = Validator::make($data, [
+            "question" => "required|string",
+            "type" => "required", Rule::in([
+                Survey::TYPE_TEXT,
+                Survey::TYPE_TEXTAREA,
+                Survey::TYPE_RADIO,
+                Survey::TYPE_CHECKBOX,
+                Survey::TYPE_SELECT
+            ]),
+            "description" => "nullable|string",
+            "data" => "present",
+            "survey_id" => "exists:App\Models\Survey,id"
+        ]);
+
+        return SurveyQuestion::create($validator->validated());
     }
 }
