@@ -5,7 +5,6 @@ namespace App\Http\Resources;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\URL;
 
 class SurveyResource extends JsonResource
@@ -18,8 +17,6 @@ class SurveyResource extends JsonResource
      */
     public function toArray($request): array|\JsonSerializable|Arrayable
     {
-        Log::info("SurveyResource");
-        Log::info($this->questions);
         return [
             "id" => $this->id,
             "image" => $this->image ? URL::to($this->image) : null,
