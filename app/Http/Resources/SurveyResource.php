@@ -18,6 +18,8 @@ class SurveyResource extends JsonResource
      */
     public function toArray($request): array|\JsonSerializable|Arrayable
     {
+        Log::info("SurveyResource");
+        Log::info($this->questions);
         return [
             "id" => $this->id,
             "image" => $this->image ? URL::to($this->image) : null,
@@ -28,7 +30,7 @@ class SurveyResource extends JsonResource
             "created_at" => $this->created_at,
             "updated_at" => $this->updated_at,
             "expiration" => $this->expiration,
-            "questions" => $this->questions,
+            "questions" => SurveyQuestionResource::collection($this->questions)
         ];
     }
 }

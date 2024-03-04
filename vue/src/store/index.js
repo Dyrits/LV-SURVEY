@@ -114,7 +114,7 @@ const store = createStore({
       });
     },
     [Actions.Survey.Remove]: ({ commit }, id) => {
-      return api.delete(`/survey/${id}`).then(() => {
+      return api.delete(`/surveys/${id}`).then(() => {
         commit(Mutations.Survey.Remove, id);
       }).catch((error) => {
         console.error(error);
