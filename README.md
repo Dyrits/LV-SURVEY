@@ -1,1 +1,45 @@
-IyBMVi1TVVJWRVkKCkEgZnVsbC1zdGFjayBzdXJ2ZXkgYXBwbGljYXRpb246IGEgTGFyYXZlbCBSRVNUIEFQSSBiYWNrIGVuZCB3aXRoIGEgVnVlIDMgc2luZ2xlLXBhZ2UgYXBwbGljYXRpb24gZnJvbnQgZW5kLgoKIyMgQWJvdXQgVGhlIFByb2plY3QKClRoZSBiYWNrIGVuZCBpcyBhIExhcmF2ZWwgYXBwbGljYXRpb24gZXhwb3NpbmcgYSBSRVNUIEFQSSB3aXRoIHRva2VuIGF1dGhlbnRpY2F0aW9uIChMYXJhdmVsIFNhbmN0dW0pLiBBdXRoZW50aWNhdGVkIHVzZXJzIGNhbiBjcmVhdGUgYW5kIG1hbmFnZSBzdXJ2ZXlzIG1hZGUgb2YgcXVlc3Rpb25zLCBhbmQgY29sbGVjdCBhbnN3ZXJzOyB0aGUgZG9tYWluIGlzIG1vZGVsZWQgd2l0aCBkZWRpY2F0ZWQgYFN1cnZleWAsIGBTdXJ2ZXlRdWVzdGlvbmAsIGBTdXJ2ZXlBbnN3ZXJgIGFuZCBgU3VydmV5UXVlc3Rpb25BbnN3ZXJgIG1vZGVscy4KClRoZSBmcm9udCBlbmQsIGluIHRoZSBgdnVlL2AgZGlyZWN0b3J5LCBpcyBhIFZ1ZSAzIGFwcGxpY2F0aW9uIGJ1bmRsZWQgd2l0aCBWaXRlLCBzdHlsZWQgd2l0aCBUYWlsd2luZCBDU1MsIHVzaW5nIFZ1ZSBSb3V0ZXIgZm9yIG5hdmlnYXRpb24sIFZ1ZXggZm9yIHN0YXRlIG1hbmFnZW1lbnQgYW5kIEF4aW9zIHRvIGNhbGwgdGhlIEFQSS4KCiMjIEJ1aWx0IFdpdGgKCi0gUEhQIC8gTGFyYXZlbCA5IChSRVNUIEFQSSwgU2FuY3R1bSBhdXRoZW50aWNhdGlvbikKLSBWdWUgMyAvIFZ1ZSBSb3V0ZXIgLyBWdWV4Ci0gVml0ZQotIFRhaWx3aW5kIENTUwoKIyMgR2V0dGluZyBTdGFydGVkCgojIyMgUHJlcmVxdWlzaXRlcwoKLSBQSFAgOC4wKyB3aXRoIENvbXBvc2VyCi0gTm9kZS5qcwotIEEgZGF0YWJhc2Ugc3VwcG9ydGVkIGJ5IExhcmF2ZWwKCiMjIyBCYWNrIGVuZAoKLSBJbnN0YWxsIHRoZSBkZXBlbmRlbmNpZXMgd2l0aCBgY29tcG9zZXIgaW5zdGFsbGAuCi0gQ29weSBgLmVudi5leGFtcGxlYCB0byBgLmVudmAgYW5kIGNvbmZpZ3VyZSB5b3VyIGRhdGFiYXNlIGNvbm5lY3Rpb24uCi0gR2VuZXJhdGUgdGhlIGFwcGxpY2F0aW9uIGtleSB3aXRoIGBwaHAgYXJ0aXNhbiBrZXk6Z2VuZXJhdGVgLgotIFJ1biB0aGUgZGF0YWJhc2UgbWlncmF0aW9ucyB3aXRoIGBwaHAgYXJ0aXNhbiBtaWdyYXRlYC4KLSBTdGFydCB0aGUgQVBJIHdpdGggYHBocCBhcnRpc2FuIHNlcnZlYC4KCiMjIyBGcm9udCBlbmQKCi0gRnJvbSB0aGUgYHZ1ZS9gIGRpcmVjdG9yeSwgaW5zdGFsbCB0aGUgZGVwZW5kZW5jaWVzIHdpdGggYG5wbSBpbnN0YWxsYC4KLSBTdGFydCB0aGUgZGV2ZWxvcG1lbnQgc2VydmVyIHdpdGggYG5wbSBydW4gZGV2YC4KCiMjIExpY2Vuc2UKCk5vIGxpY2Vuc2UgZmlsZSBpcyBwcmVzZW50IGluIHRoaXMgcmVwb3NpdG9yeS4KCiMjIENvbnRhY3QKCkR5bGFuIEouIEdlcnJpdHMgLSBbR2l0SHViXShodHRwczovL2dpdGh1Yi5jb20vRHlyaXRzKQo=
+# LV-SURVEY
+
+A full-stack survey application: a Laravel REST API back end with a Vue 3 single-page application front end.
+
+## About The Project
+
+The back end is a Laravel application exposing a REST API with token authentication (Laravel Sanctum). Authenticated users can create and manage surveys made of questions, and collect answers; the domain is modeled with dedicated `Survey`, `SurveyQuestion`, `SurveyAnswer` and `SurveyQuestionAnswer` models.
+
+The front end, in the `vue/` directory, is a Vue 3 application bundled with Vite, styled with Tailwind CSS, using Vue Router for navigation, Vuex for state management and Axios to call the API.
+
+## Built With
+
+- PHP / Laravel 9 (REST API, Sanctum authentication)
+- Vue 3 / Vue Router / Vuex
+- Vite
+- Tailwind CSS
+
+## Getting Started
+
+### Prerequisites
+
+- PHP 8.0+ with Composer
+- Node.js
+- A database supported by Laravel
+
+### Back end
+
+- Install the dependencies with `composer install`.
+- Copy `.env.example` to `.env` and configure your database connection.
+- Generate the application key with `php artisan key:generate`.
+- Run the database migrations with `php artisan migrate`.
+- Start the API with `php artisan serve`.
+
+### Front end
+
+- From the `vue/` directory, install the dependencies with `npm install`.
+- Start the development server with `npm run dev`.
+
+## License
+
+No license file is present in this repository.
+
+## Contact
+
+Dylan J. Gerrits - [GitHub](https://github.com/Dyrits)
