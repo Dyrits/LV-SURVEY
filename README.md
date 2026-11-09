@@ -51,3 +51,20 @@ Tested with Node.js 26.13.0 LTS. The root asset build uses Laravel Vite Plugin 2
 Clean `npm ci` and production builds pass in both directories. Local Chromium checks cover unauthenticated routing, the dashboard with a local session fixture, survey editor rendering, and UUID-backed question/option creation. The 430px view has no horizontal overflow, but the existing external logo is broken and the narrow question-type control is cramped. These checks are not a real login, survey save or backend integration test.
 
 Root npm audit drops from 5 to 0 package findings (31 to 0 distinct advisory IDs). Vue npm audit drops from 8 to 4 package findings (21 to 1 distinct ID), with no new advisory IDs; the residual Minimatch finding remains. A zero root npm audit is not a full application clearance. PHP/Laravel 9 dependencies, real database/API behavior, and the existing floating Docker image are outside this front-end update and remain unverified.
+
+
+## PHP dependency verification (November 9, 2026)
+
+The targeted Composer refresh updates Guzzle 7.9.3 to 7.16.1 and compatible locked dependencies, including the Promises 2 and PSR HTTP Message 2 interfaces required by patched Guzzle. Symfony HTTP Foundation, HTTP Kernel, Routing and YAML move from 6.4.49 to 6.4.50. Laravel 9 and all application controllers, models and migrations remain unchanged. No production database migration or deployment was performed.
+
+With a locally isolated Ubuntu PHP 8.1 CLI, the original locked install and two starter tests pass using an ephemeral application key. The same runtime also passes the expanded six-test suite on both original and refreshed dependencies. Coverage includes Laravel HTTP JSON/async behavior, Guzzle redirect/promise behavior through mock handlers, the password-breach verifier using intercepted synthetic HTTP data, Sanctum login, protected routes, survey create/read/update/delete and cross-user read rejection against in-memory SQLite. No real passwords, breach service, email service or existing database are used. These tests are not a MySQL, browser-to-backend, live network-transport or full security test.
+
+For the same isolated test setup after `composer install`, use a PHP CLI with PDO SQLite, mbstring and XML extensions:
+
+```sh
+php scripts/test-dependencies.php
+```
+
+The runner forces a fresh ephemeral test key, in-memory SQLite and array-backed cache/session/mail; it never needs the project's real `.env` key or database. It does not run schema changes against a persistent database.
+
+Composer audit fell from 21 advisory IDs across six packages to six IDs in Laravel itself, with no new IDs. Laravel 9 still has known findings, including critical/high findings, and needs a separately verified framework migration. PHP 8.1 is used here only as compatibility evidence for the existing stack, not as a supported production-runtime recommendation. The older backend and floating Docker image are not cleared by this targeted update.
