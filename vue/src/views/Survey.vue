@@ -185,6 +185,7 @@
 import { onMounted, reactive, ref, watch, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { v4 as uuidv4 } from "uuid";
+import { surveyExpirationForInput } from "../utils/survey-expiration";
 
 import store, { Actions } from "../store";
 
@@ -211,7 +212,7 @@ onMounted(async () => {
       Object.assign(model, {
         ...survey,
         status: survey.status !== "draft",
-        expiration: new Date(survey.expiration.split(" ")[0]).toISOString().split("T")[0]
+        expiration: surveyExpirationForInput(survey.expiration)
       });
     })
   } else {

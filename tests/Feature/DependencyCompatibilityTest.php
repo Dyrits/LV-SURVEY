@@ -53,6 +53,20 @@ class DependencyCompatibilityTest extends TestCase
         Http::assertSent(fn ($request) => $request->url() === 'https://api.pwnedpasswords.com/range/'.substr($hash, 0, 5));
     }
 
+    public function test_registration_uses_fake_breach_data_and_rejects_bad_input()
+    {
+        Http::preventStrayRequests();
+        Http::fake(['api.pwnedpasswords.com/*' => Http::response('', 200)]);
+        $password = 'Fixture-Only-123!';
+        $response = $this->postJson('/api/user/sign-up', [
+            'name' => 'Fixture', 'email' => 'register@fixture.invalid',
+            'password' => $password, 'password_confirmation' => $password,
+        ])->assertOk()->assertJsonStructure(['user', 'token']);
+        $this->assertDatabaseHas('users', ['email' => 'register@fixture.invalid']);
+        $this->assertTrue(Hash::check($password, User::where('email', 'register@fixture.invalid')->firstOrFail()->password));
+        $this->postJson('/api/user/sign-up', [])->assertUnprocessable()->assertJsonValidationErrors(['name', 'email', 'password']);
+    }
+
     public function test_sanctum_login_and_survey_crud_use_only_ephemeral_sqlite()
     {
         $this->getJson('/api/surveys')->assertUnauthorized();
